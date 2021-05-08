@@ -42,7 +42,7 @@ export const orderLoadFailed = () => {
 }
 
 export const fetchOrders = () => dispatch => {
-    axios.get("FIREBASE_LINK/orders.json")
+    axios.get("https://foodishapp-e638b-default-rtdb.firebaseio.com/orders.json")
         .then(response => {
             dispatch(loadOrders(response.data));
         })
