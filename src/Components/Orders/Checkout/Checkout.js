@@ -54,7 +54,7 @@ class Checkout extends Component {
             price: this.props.totalPrice,
             orderTime: new Date(),
         }
-        axios.post("https://foodishapp-e638b-default-rtdb.firebaseio.com/orders.json", order)
+        axios.post("FIREBASE_LINK", order)
             .then(response => {
                 if (response.status === 200) {
                     this.setState({
