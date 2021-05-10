@@ -3,6 +3,14 @@ import { Formik } from 'formik';
 
 
 class Auth extends Component {
+    state = {
+        authMode: "Sign Up"
+    }
+    switchModeHandler = () => {
+        this.setState({
+            authMode: this.state.authMode === "Sign Up" ? "Login" : "Sign Up"
+        })
+    }
     render() {
         return (
             <div>
@@ -32,10 +40,12 @@ class Auth extends Component {
                                 errors.password = 'Password must be at least 6 character';
                             }
 
-                            if (!values.passConfirm) {
-                                errors.passConfirm = 'Required';
-                            } else if (values.password !== values.passConfirm) {
-                                errors.passConfirm = 'Confirm password not match';
+                            if (this.state.authMode === "Sign Up") {
+                                if (!values.passConfirm) {
+                                    errors.passConfirm = 'Required';
+                                } else if (values.password !== values.passConfirm) {
+                                    errors.passConfirm = 'Confirm password not match';
+                                }
                             }
                             return errors;
                         }
@@ -43,6 +53,7 @@ class Auth extends Component {
                 >
                     {({ values, handleChange, handleSubmit, errors }) => (
                         <div style={{ border: "1px grey solid", padding: "15px", borderRadius: "7px" }}>
+                            <button style={{ width: "100%", backgroundColor: "#D70F64", color: "white" }} className="btn btn-lg" onClick={this.switchModeHandler}>Switch  to {this.state.authMode === "Sign Up" ? "Login" : "Sign Up"}</button><br /><br />
                             <form onSubmit={handleSubmit}>
                                 <input
                                     name="email"
@@ -63,17 +74,21 @@ class Auth extends Component {
                                 />
                                 <span className="text-danger">{errors.password}</span>
                                 <br />
-                                <input
-                                    name="passConfirm"
-                                    placeholder="Enter confirm password"
-                                    className="form-control"
-                                    type="password"
-                                    value={values.passConfirm}
-                                    onChange={handleChange}
-                                />
-                                <span className="text-danger">{errors.passConfirm}</span>
-                                <br />
-                                <button type="submit" className="btn btn-success btn-sm">Sign Up</button>
+                                {this.state.authMode === "Sign Up" ?
+                                    <div>
+                                        <input
+                                            name="passConfirm"
+                                            placeholder="Enter confirm password"
+                                            className="form-control"
+                                            type="password"
+                                            value={values.passConfirm}
+                                            onChange={handleChange}
+                                        />
+                                        <span className="text-danger">{errors.passConfirm}</span>
+                                        <br />
+                                    </div>
+                                    : null}
+                                <button type="submit" className="btn btn-success">{this.state.authMode === "Sign Up" ? "Sign Up" : "Login"}</button>
                             </form>
                         </div>
                     )}
