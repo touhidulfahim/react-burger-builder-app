@@ -1,6 +1,18 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
 
+
+
+export const authSuccess = (token, userId) => {
+    return {
+        type: actionTypes.AUTH_SUCCESS,
+        payload: {
+            token: token,
+            userId: userId,
+        }
+    }
+}
+
 export const auth = (email, password, authMode) => dispatch => {
     const authData = {
         email: email,
@@ -15,6 +27,8 @@ export const auth = (email, password, authMode) => dispatch => {
     }
     const API_KEY = "AIzaSyD2pjjrQyPY81TT6SKfwDI8wGo0a9Um4tQ"
     axios.post(authUrl + API_KEY, authData)
-        .then(response => console.log(response))
+        .then(response => {
+            dispatch(authSuccess(response.data.itdToken, response.data.localId))
+        })
 }
 
