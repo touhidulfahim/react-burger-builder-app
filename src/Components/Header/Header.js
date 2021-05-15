@@ -8,6 +8,7 @@ import {
     NavItem,
 } from 'reactstrap';
 import Logo from '../../assets/logo.png';
+
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => {
@@ -34,6 +35,9 @@ const Header = props => {
                 </NavItem>
                 <NavItem>
                     <NavLink exact to="/orders" className="NavLink">Orders</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink exact to="/logout" className="NavLink">Logout</NavLink>
                 </NavItem>
             </Nav>
         )

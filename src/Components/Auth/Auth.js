@@ -1,106 +1,117 @@
 import React, { Component } from 'react';
 import { Formik } from 'formik';
-import { auth } from '../../redux/authActionCreators';
+
 import { connect } from 'react-redux';
+import { auth } from '../../redux/authActionCreators';
+
 
 const mapDispatchToProps = dispatch => {
     return {
-        auth: (email, password, authMode) => dispatch(auth(email, password, authMode))
+        auth: (email, password, mode) => dispatch(auth(email, password, mode))
     }
 }
-
 class Auth extends Component {
     state = {
-        authMode: "Sign Up"
+        mode: "Sign Up"
     }
+
     switchModeHandler = () => {
-        this.setState({
-            authMode: this.state.authMode === "Sign Up" ? "Login" : "Sign Up"
-        })
+        this.setState({ mode: this.state.mode === "Sign Up" ? "Login" : "Sign Up" })
     }
+
     render() {
         return (
             <div>
                 <Formik
                     initialValues={
                         {
-                            email: "", password: "", passConfirm: "",
+                            email: "",
+                            password: "",
+                            passwordConfirm: "",
                         }
                     }
+
                     onSubmit={
                         (values) => {
-                            this.props.auth(values.email, values.password, this.state.authMode)
+                            this.props.auth(values.email, values.password, this.state.mode);
                         }
                     }
-                    validate={
-                        (values) => {
-                            const errors = {};
-                            if (!values.email) {
-                                errors.email = 'Required'
-                            } else if (!/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/i.test(values.email)) {
-                                errors.email = 'Invalid email address';
-                            }
 
-                            if (!values.password) {
-                                errors.password = 'Required';
-                            } else if (values.password.length < 6) {
-                                errors.password = 'Password must be at least 6 character';
-                            }
+                    validate={(values) => {
+                        const errors = {};
 
-                            if (this.state.authMode === "Sign Up") {
-                                if (!values.passConfirm) {
-                                    errors.passConfirm = 'Required';
-                                } else if (values.password !== values.passConfirm) {
-                                    errors.passConfirm = 'Confirm password not match';
-                                }
-                            }
-                            return errors;
+                        if (!values.email) {
+                            errors.email = 'Required';
+                        } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+                            errors.email = 'Invalid email address';
                         }
-                    }
+
+                        if (!values.password) {
+                            errors.password = 'Required';
+                        } else if (values.password.length < 4) {
+                            errors.password = 'Must be atleast 4 characters!';
+                        }
+
+                        if (this.state.mode === "Sign Up") {
+                            if (!values.passwordConfirm) {
+                                errors.passwordConfirm = 'Required';
+                            } else if (values.password !== values.passwordConfirm) {
+                                errors.passwordConfirm = 'Password field does no match!';
+                            }
+                        }
+                        //console.log("Errors:", errors)
+                        return errors;
+                    }}
                 >
                     {({ values, handleChange, handleSubmit, errors }) => (
-                        <div style={{ border: "1px grey solid", padding: "15px", borderRadius: "7px" }}>
-                            <button style={{ width: "100%", backgroundColor: "#D70F64", color: "white" }} className="btn btn-lg" onClick={this.switchModeHandler}>Switch  to {this.state.authMode === "Sign Up" ? "Login" : "Sign Up"}</button><br /><br />
+                        <div style={{
+                            border: "1px grey solid",
+                            padding: "15px",
+                            borderRadius: "7px",
+                        }}>
+                            <button style={{
+                                width: "100%",
+                                backgroundColor: "#D70F64",
+                                color: "white",
+                            }} className="btn btn-lg" onClick={this.switchModeHandler}>Switch to {this.state.mode === "Sign Up" ? "Login" : "Sign Up"}</button>
+                            <br /><br />
                             <form onSubmit={handleSubmit}>
                                 <input
                                     name="email"
-                                    placeholder="Enter your email"
+                                    placeholder="Enter Your Email"
                                     className="form-control"
                                     value={values.email}
                                     onChange={handleChange}
                                 />
-                                <span className="text-danger">{errors.email}</span>
+                                <span style={{ color: "red" }}>{errors.email}</span>
                                 <br />
                                 <input
                                     name="password"
-                                    placeholder="Enter login password"
+                                    placeholder="Password"
                                     className="form-control"
-                                    type="password"
                                     value={values.password}
                                     onChange={handleChange}
                                 />
-                                <span className="text-danger">{errors.password}</span>
+                                <span style={{ color: "red" }}>{errors.password}</span>
                                 <br />
-                                {this.state.authMode === "Sign Up" ?
-                                    <div>
-                                        <input
-                                            name="passConfirm"
-                                            placeholder="Enter confirm password"
-                                            className="form-control"
-                                            type="password"
-                                            value={values.passConfirm}
-                                            onChange={handleChange}
-                                        />
-                                        <span className="text-danger">{errors.passConfirm}</span>
-                                        <br />
-                                    </div>
-                                    : null}
-                                <button type="submit" className="btn btn-success">{this.state.authMode === "Sign Up" ? "Sign Up" : "Login"}</button>
+
+                                {this.state.mode === "Sign Up" ? <div>
+                                    <input
+                                        name="passwordConfirm"
+                                        placeholder="Confirm Password"
+                                        className="form-control"
+                                        value={values.passwordConfirm}
+                                        onChange={handleChange}
+                                    />
+                                    <span style={{ color: "red" }}>{errors.passwordConfirm}</span>
+                                    <br />
+                                </div> : null}
+
+                                <button type="submit" className="btn btn-success">{this.state.mode === "Sign Up" ? "Sign Up" : "Login"}</button>
                             </form>
-                        </div>
-                    )}
+                        </div>)}
                 </Formik>
-            </div >
+            </div>
         )
     }
 }
