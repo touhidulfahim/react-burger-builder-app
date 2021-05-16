@@ -50,3 +50,10 @@ export const fetchOrders = () => dispatch => {
             dispatch(orderLoadFailed());
         })
 }
+
+export const authFailed = errMsg => {
+    return {
+        type: actionTypes.AUTH_FAILED,
+        payload: errMsg,
+    }
+}

@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import { authFailed } from './actionCreators';
 
 export const authSuccess = (token, userId) => {
     return {
@@ -45,8 +46,7 @@ export const auth = (email, password, mode) => dispatch => {
         })
         .catch(err => {
             dispatch(authLoading(false));
-            console.log(err);
-            //dispatch(authLoading());
+            dispatch(authFailed(err.response.data.error.message));
         })
 }
 
