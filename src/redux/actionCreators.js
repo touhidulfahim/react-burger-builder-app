@@ -41,8 +41,9 @@ export const orderLoadFailed = () => {
     }
 }
 
-export const fetchOrders = () => dispatch => {
-    axios.get("https://foodishapp-e638b-default-rtdb.firebaseio.com/orders.json")
+export const fetchOrders = (token, userId) => dispatch => {
+    const queryParam = '&orderBy="userId"&equalTo="' + userId + '"';
+    axios.get('https://foodishapp-e638b-default-rtdb.firebaseio.com/orders.json?auth=' + token + queryParam)
         .then(response => {
             dispatch(loadOrders(response.data));
         })
